@@ -135,18 +135,30 @@ add_library (lib60870-shared SHARED ${library_SRCS} )
 set_target_properties(lib60870-shared PROPERTIES
            OUTPUT_NAME lib60870
            SOVERSION "${LIB_VERSION_MAJOR}.${LIB_VERSION_MINOR}.${LIB_VERSION_PATCH}"
-	   WINDOWS_EXPORT_ALL_SYMBOLS true
+           WINDOWS_EXPORT_ALL_SYMBOLS true
+)
+
+target_include_directories(lib60870-shared
+        PUBLIC ${LIB60870_PUBLIC_INCLUDE_DIRS}
 )
 
 
 GENERATE_EXPORT_HEADER(lib60870-shared
-			BASE_NAME lib60870-shared
-			EXPORT_MACRO_NAME lib60870-shared_EXPORT
-			EXPORT_FILE_NAME lib60870-shared_export.h
-			STATIC_DEFINE lib60870-shared_BUILT_AS_STATIC
+                        BASE_NAME lib60870-shared
+                        EXPORT_MACRO_NAME lib60870-shared_EXPORT
+                        EXPORT_FILE_NAME lib60870-shared_export.h
+                        STATIC_DEFINE lib60870-shared_BUILT_AS_STATIC
 )
 
 add_library (lib60870 STATIC ${library_SRCS})
+
+target_include_directories(lib60870
+        PUBLIC ${LIB60870_PUBLIC_INCLUDE_DIRS}
+)
+
+if (WIN32)
+        set_target_properties(lib60870 PROPERTIES OUTPUT_NAME lib60870-static)
+endif()
 
 IF(UNIX)
     target_link_libraries (lib60870

@@ -47,7 +47,7 @@ endif(EXISTS ${CMAKE_CURRENT_LIST_DIR}/dependencies/mbedtls-2.28)
 
 endif(BUILD_HAL)
 
-include_directories(
+set(LIB60870_PUBLIC_INCLUDE_DIRS
     ${CMAKE_CURRENT_LIST_DIR}/config
     ${CMAKE_CURRENT_LIST_DIR}/src/file-service
     ${CMAKE_CURRENT_LIST_DIR}/src/inc/api
@@ -57,7 +57,7 @@ include_directories(
 )
 
 if(WITH_MBEDTLS)
-include_directories(
+list(APPEND LIB60870_PUBLIC_INCLUDE_DIRS
     ${CMAKE_CURRENT_LIST_DIR}/src/hal/tls/mbedtls
     ${CMAKE_CURRENT_LIST_DIR}/dependencies/mbedtls-2.28/include
 )
@@ -70,9 +70,9 @@ add_definitions(-DMBEDTLS_CONFIG_FILE="mbedtls_config.h")
 endif(WITH_MBEDTLS)
 
 if(WITH_MBEDTLS3)
-include_directories(
-	${CMAKE_CURRENT_LIST_DIR}/src/hal/tls/mbedtls3
-	${CMAKE_CURRENT_LIST_DIR}/dependencies/mbedtls-3.6/include
+list(APPEND LIB60870_PUBLIC_INCLUDE_DIRS
+        ${CMAKE_CURRENT_LIST_DIR}/src/hal/tls/mbedtls3
+        ${CMAKE_CURRENT_LIST_DIR}/dependencies/mbedtls-3.6/include
 )
 
 file(GLOB tls_SRCS ${CMAKE_CURRENT_LIST_DIR}/dependencies/mbedtls-3.6/library/*.c)
@@ -114,15 +114,15 @@ endif(SUPPORT_REDUNDANT_DECLS)
 # write the detected stuff to this file
 # configure_file(config/lib60870_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config/lib60870_config.h)
 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src)
+
 if(BUILD_EXAMPLES)
-	add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples)
+        add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples)
 endif(BUILD_EXAMPLES)
 
 if(BUILD_TESTS)
-	add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests)
+        add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests)
 endif(BUILD_TESTS)
-
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/src)
 
 INSTALL(FILES ${API_HEADERS} DESTINATION include/lib60870 COMPONENT Development)
 
